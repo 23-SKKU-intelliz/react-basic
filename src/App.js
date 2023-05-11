@@ -7,7 +7,7 @@ import {useState} from "react";
 function App() {
   const [id, setId] = useState(1);
   const [nextId, setNextId] = useState(3);
-  console.log(id);
+  const [mode, setMode] = useState("read");
   const [topics, setTopics] = useState([
     {id: 0, title: "html", body: "html is ...."},
     {id: 1, title: "css", body: "css is ...."},
@@ -17,14 +17,17 @@ function App() {
   return (
     <div>
       <Header title="new title" onChangeMode={()=>{
-        alert("header");
+        setMode("create");
       }}/>
       <Nav topics={topics} onChangeMode={(title, body)=>{alert(title)}} setIdProp={(value)=>{setId(value);}}/>
-      <Article titleProp={topics[id].title} bodyProp={topics[id].body} submitHandler={(title, body)=>{
-        console.log("new topic" + title + "  " + body);
+      <Article id={id} mode={mode} setMode={setMode} titleProp={topics[id].title} bodyProp={topics[id].body} submitHandler={(title, body)=>{
         const newtopics = [...topics];
-        newtopics.push({id: 4, title: title, body: body});
-        console.log(newtopics, topics);
+        newtopics.push({id: nextId, title: title, body: body});
+        setNextId(nextId+1);
+        setTopics(newtopics);
+      }} updateHandler={(title, body)=>{
+        const newtopics = [...topics];
+        newtopics[id] = {title: title, body: body};
         setTopics(newtopics);
       }}/>
     </div>
